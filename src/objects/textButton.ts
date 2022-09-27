@@ -9,7 +9,7 @@ import {
   vec,
   Vector,
 } from "excalibur";
-import CalcVec from "../util/Calcvec";
+import resizeSprite from "../util/resizeSprite";
 import Resources from "./resouces";
 
 interface TextButtonProps {
@@ -43,7 +43,7 @@ class TextButton extends ScreenElement {
       btnHovered,
     } = props;
 
-    const _vec = CalcVec(btnBackground, width, height);
+    const _vec = resizeSprite(btnBackground, width, height);
     const _width = Resources.BtnBackground.width * _vec.x;
     const _height = Resources.BtnBackground.height * _vec.y;
 

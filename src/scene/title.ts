@@ -14,7 +14,7 @@ import {
 } from "excalibur";
 import textButton from "../objects/textButton";
 import resources from "../objects/resouces";
-import CalcVec from "../util/Calcvec";
+import resizeSprite from "../util/resizeSprite";
 
 class Title extends Scene {
   private _game: Engine;
@@ -29,7 +29,7 @@ class Title extends Scene {
   }
 
   public onInitialize(_engine: Engine): void {
-    this._bg.scale = CalcVec(
+    this._bg.scale = resizeSprite(
       this._bg,
       this._game.drawWidth,
       this._game.drawHeight

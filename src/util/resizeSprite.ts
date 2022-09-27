@@ -7,7 +7,11 @@ import { Sprite, Vector } from "excalibur";
  * @param height
  * @returns
  */
-const CalcVec = (sprite: Sprite, width?: number, height?: number): Vector => {
+const resizeSprite = (
+  sprite: Sprite,
+  width?: number,
+  height?: number
+): Vector => {
   if (sprite.width === (NaN || 0) || sprite.height === (NaN || 0))
     return new Vector(0.1, 0.1);
   if (width && height) {
@@ -21,4 +25,4 @@ const CalcVec = (sprite: Sprite, width?: number, height?: number): Vector => {
   }
 };
 
-export default CalcVec;
+export default resizeSprite;
