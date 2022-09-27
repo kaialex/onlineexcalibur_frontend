@@ -1,7 +1,7 @@
 import { ImageFiltering, ImageSource } from "excalibur";
 
 //ImagesURL
-import titleURL from "../assets/title.png";
+import titleURL from "../assets/title.jpeg";
 import btnBackgroundURL from "../assets/button.png";
 import btnHoverURL from "../assets/button.png";
 
