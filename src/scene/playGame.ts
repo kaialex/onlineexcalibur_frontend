@@ -62,12 +62,15 @@ class PlayGame extends Scene {
       this.startCountDown();
     });
 
-    //ゲームオーバー
+    //タイトルに戻るイベント
     connection?.addSocketEvent("backToTitle", (data: any) => {
-      alert(data.message);
       this._board.resetBoard();
       this._currentMino?.kill();
       this._game.goToScene("title");
+    });
+
+    connection?.addSocketEvent("makePopup", (data: any) => {
+      alert(data.message);
     });
   }
 
@@ -127,10 +130,7 @@ class PlayGame extends Scene {
     this.add(this._currentMino);
   }
 
-  public dissapearedLineAction(dissapeared_line: number[]) {
-    console.log(dissapeared_line);
-    console.log("消えるアクション");
-  }
+  public dissapearedLineAction(dissapeared_line: number[]) {}
 }
 
 export default PlayGame;

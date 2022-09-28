@@ -16,6 +16,7 @@ import {
 import textButton from "../objects/textButton";
 import resources from "../objects/resouces";
 import resizeSprite from "../util/resizeSprite";
+import { connection } from "../api/socketConnection";
 
 class Title extends Scene {
   private _game: Engine;
@@ -70,7 +71,8 @@ class Title extends Scene {
       }),
       width: 200,
       clicked: () => {
-        this._game.goToScene("playgame");
+        //this._game.goToScene("playgame");
+        connection?.emitMessage("matching");
       },
       btnBackground: resources.BtnBackground.toSprite(),
     });
@@ -83,6 +85,11 @@ class Title extends Scene {
     this.add(background);
     this.add(title);
     this.add(button);
+
+    //イベント登録
+    connection?.addSocketEvent("startGame", () => {
+      this._game.goToScene("playgame");
+    });
   }
 
   public onActivate(_context: ex.SceneActivationContext<unknown>): void {}

@@ -73,7 +73,6 @@ class Mino extends Actor {
   }
 
   updateBlockData(blockdata: block[][]): void {
-    console.log(blockdata);
     this._targetmino.blockdata = blockdata;
     this.drawMino();
   }
