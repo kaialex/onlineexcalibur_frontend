@@ -58,13 +58,13 @@ class PlayGame extends Scene {
       this.dissapearedLineAction(dissapeared_line);
     });
 
-    connection?.addSocketEvent("startcountDown", (data: any) => {
+    connection?.addSocketEvent("startCountDown", (data: any) => {
       this.startCountDown();
     });
 
     //ゲームオーバー
-    connection?.addSocketEvent("gameOver", (data: any) => {
-      alert("gameover");
+    connection?.addSocketEvent("backToTitle", (data: any) => {
+      alert(data.message);
       this._board.resetBoard();
       this._currentMino?.kill();
       this._game.goToScene("title");
@@ -73,7 +73,6 @@ class PlayGame extends Scene {
 
   public onActivate(_context: SceneActivationContext<unknown>): void {
     this._score = 0;
-
     this._game.clock.schedule(() => {
       connection?.emitMessage("readyStart");
     }, 1000);

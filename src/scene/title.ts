@@ -1,6 +1,7 @@
 import {
   Actor,
   BaseAlign,
+  Color,
   Engine,
   Font,
   Label,
@@ -45,12 +46,13 @@ class Title extends Scene {
     const title = new Label({
       x: this._game.drawWidth / 2,
       y: this._game.drawHeight / 2 - 100,
-      text: "HALLO",
+      text: "MULTI TETRIS",
       font: new Font({
         family: "impact",
-        size: 100,
+        size: 70,
         textAlign: TextAlign.Center,
         baseAlign: BaseAlign.Middle,
+        color: Color.White,
       }),
     });
 

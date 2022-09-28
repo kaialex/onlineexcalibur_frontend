@@ -14,7 +14,6 @@ class socketConnection {
     this.socket.on("updateConnectionCount", (data) => {
       const { newConnectCount }: { newConnectCount: number } = data;
       console.log(newConnectCount);
-      this.socket.emit("okok", { ok: "ok" });
     });
   }
 
