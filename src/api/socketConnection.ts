@@ -33,7 +33,7 @@ export let connection: socketConnection | undefined = undefined;
 export const makeConnection = () => {
   //ソケット通信の設定
   //本番環境ではherokuのURLを指定する
-  const ENDPOINT: string = "https://dry-gorge-32209.herokuapp.com/";
+  const ENDPOINT: string = "https://kaialex22-excalibur.herokuapp.com/";
   connection = new socketConnection(ENDPOINT);
   connection.init();
 };
