@@ -36,8 +36,8 @@ class Title extends Scene {
     );
     //背景画像
     const background = new Actor({
-      x: this._bg.width / 2,
-      y: this._bg.height / 2,
+      x: this._game.screen.center.x,
+      y: this._game.screen.center.y,
     });
     background.graphics.use(this._bg);
 
@@ -69,7 +69,6 @@ class Title extends Scene {
       width: 200,
       clicked: () => {
         this._game.goToScene("playgame");
-        alert("I've been clicked");
       },
       btnBackground: resources.BtnBackground.toSprite(),
     });

@@ -1,13 +1,11 @@
 import { DisplayMode, Engine, Loader } from "excalibur";
-import socketConnection from "./api/socketConnection";
+import { makeConnection } from "./api/socketConnection";
 import Resources from "./objects/resouces";
 import PlayGame from "./scene/playGame";
 import Title from "./scene/title";
 
-//ソケット通信の設定
-const ENDPOINT: string = "http://localhost:8080";
-const connection = new socketConnection(ENDPOINT);
-connection.init();
+//コネクション生成
+makeConnection();
 
 //エンジンの作成
 const game = new Engine({
