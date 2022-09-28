@@ -33,7 +33,7 @@ export let connection: socketConnection | undefined = undefined;
 export const makeConnection = () => {
   //ソケット通信の設定
   //本番環境ではherokuのURLを指定する
-  const ENDPOINT: string = "http://localhost:8080";
+  const ENDPOINT: string = "https://dry-gorge-32209.herokuapp.com/";
   connection = new socketConnection(ENDPOINT);
   connection.init();
 };
