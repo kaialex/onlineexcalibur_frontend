@@ -124,6 +124,7 @@ class PlayGame extends Scene {
   }
 
   public onActivate(_context: SceneActivationContext<unknown>): void {
+    this.changeLabel(true, [0, 0]);
     this._game.clock.schedule(() => {
       connection?.emitMessage("readyStart");
     }, 1000);
