@@ -119,7 +119,6 @@ class PlayGame extends Scene {
     });
 
     connection?.addSocketEvent("updateScore", (data: any) => {
-      console.log(data);
       this.changeLabel(data.isturn, data.score);
     });
   }

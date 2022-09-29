@@ -5,7 +5,6 @@ class socketConnection {
   private socket;
 
   constructor(path: string) {
-    console.log("newsocket");
     this.ENDPOINT = path;
     this.socket = io(this.ENDPOINT, { autoConnect: false });
   }
@@ -15,7 +14,6 @@ class socketConnection {
     this.socket.open();
     this.socket.on("updateConnectionCount", (data) => {
       const { newConnectCount }: { newConnectCount: number } = data;
-      console.log(newConnectCount);
     });
   }
 
