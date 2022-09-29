@@ -35,8 +35,8 @@ export let connection: socketConnection | undefined = undefined;
 export const makeConnection = () => {
   //ソケット通信の設定
   //本番環境ではherokuのURLを指定する
-  //const ENDPOINT: string = "https://kaialex22-excalibur.herokuapp.com/";
-  const ENDPOINT: string = "http://localhost:8080";
+  const ENDPOINT: string = "https://kaialex22-excalibur.herokuapp.com/";
+  //const ENDPOINT: string = "http://localhost:8080";
   connection = new socketConnection(ENDPOINT);
   connection.init();
 };
