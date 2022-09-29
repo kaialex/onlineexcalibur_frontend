@@ -118,7 +118,6 @@ class Title extends Scene {
       });
       this._popUp.changeText(data.message, 15);
       this.add(this._popUp);
-      console.log("makepopup");
     });
 
     connection?.addSocketEvent("waitMatching", (data: any) => {

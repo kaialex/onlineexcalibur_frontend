@@ -60,7 +60,6 @@ class Popup extends Actor {
 
     //クリックボタンの配置
     if (buttontext === undefined) return;
-    console.log("aaa");
     this._button = new TextButton({
       scene: scene,
       pos: vec(pos.x, pos.y),
@@ -80,7 +79,6 @@ class Popup extends Actor {
       btnBackground: Resources.BtnBackground.toSprite(),
       z: 1001,
     });
-    console.log(this._button.pos);
     this._button.pos = vec(
       this._button.pos.x - this._button.width / 2,
       this._button.pos.y
