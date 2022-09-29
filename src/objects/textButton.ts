@@ -21,6 +21,7 @@ interface TextButtonProps {
   clicked?: () => void;
   btnBackground: Sprite;
   btnHovered?: Sprite;
+  z: number;
 }
 
 class TextButton extends ScreenElement {
@@ -41,6 +42,7 @@ class TextButton extends ScreenElement {
       clicked,
       btnBackground,
       btnHovered,
+      z,
     } = props;
 
     const _vec = resizeSprite(btnBackground, width, height);
@@ -51,6 +53,7 @@ class TextButton extends ScreenElement {
       pos: pos,
       width: _width,
       height: _height,
+      z: z,
     });
 
     this._btnBackground = btnBackground;
@@ -69,7 +72,7 @@ class TextButton extends ScreenElement {
       text: text ? text.text : "",
       font: text?.font instanceof Font ? text.font : undefined,
       spriteFont: text?.font instanceof SpriteFont ? text.font : undefined,
-      z: 1,
+      z: z + 1,
     });
 
     scene.add(this._text);
@@ -81,21 +84,7 @@ class TextButton extends ScreenElement {
 
     this.graphics.show("idle");
 
-    this.on("pointerup", () => {
-      if (this._clicked !== undefined) {
-        this._clicked();
-      }
-    });
-
-    this.on("pointerenter", () => {
-      this.graphics.hide("idle");
-      this.graphics.show("hover");
-    });
-
-    this.on("pointerleave", () => {
-      this.graphics.hide("hover");
-      this.graphics.show("idle");
-    });
+    this.activateButtonEvent();
   }
 
   set pos(thepos: Vector) {
@@ -106,6 +95,38 @@ class TextButton extends ScreenElement {
         thepos.y + this._height / 2
       );
     }
+  }
+
+  get pos() {
+    return super.pos;
+  }
+
+  kill() {
+    this._text.kill();
+    super.kill();
+  }
+
+  public preventButtonEvent() {
+    this.off("pointerup");
+    this.off("pointerenter");
+    this.off("pointerleave");
+  }
+
+  public activateButtonEvent() {
+    this.on("pointerup", () => {
+      if (this._clicked !== undefined) {
+        this._clicked();
+      }
+    });
+    this.on("pointerenter", () => {
+      this.graphics.hide("idle");
+      this.graphics.show("hover");
+    });
+
+    this.on("pointerleave", () => {
+      this.graphics.hide("hover");
+      this.graphics.show("idle");
+    });
   }
 
   public Deactivate() {}

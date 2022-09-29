@@ -1,4 +1,14 @@
-import { Engine, Input, Scene, SceneActivationContext, vec } from "excalibur";
+import {
+  BaseAlign,
+  Engine,
+  Font,
+  Input,
+  Label,
+  Scene,
+  SceneActivationContext,
+  TextAlign,
+  vec,
+} from "excalibur";
 import Frame from "../objects/frame";
 import Board from "../objects/board";
 import Mino from "../objects/mino";
@@ -7,23 +17,62 @@ import { block, MinoProps } from "../objects/minodata";
 
 class PlayGame extends Scene {
   private _game: Engine;
-  private _score: number;
   private _board!: Board;
   private _currentMino: Mino | undefined;
+
+  private _turnlabel!: Label;
+  private _scorelabel!: Label;
+
+  private readonly _blocksize: number = 25;
 
   constructor(game: Engine) {
     super();
     this._game = game;
-    this._score = 0;
   }
 
   public onInitialize(_engine: Engine): void {
+    this._turnlabel = new Label({
+      x: this._game.drawWidth / 2,
+      y: 50,
+      text: "あなたの番です",
+      font: new Font({
+        size: 30,
+        textAlign: TextAlign.Center,
+        baseAlign: BaseAlign.Middle,
+      }),
+    });
+
+    this._scorelabel = new Label({
+      x: this._game.drawWidth / 2,
+      y: 100,
+      text: `あなたのスコア: 0  相手のスコア: 0`,
+      font: new Font({
+        size: 20,
+        textAlign: TextAlign.Center,
+        baseAlign: BaseAlign.Middle,
+      }),
+    });
+
     //大きな枠を生成する
-    const frame = new Frame(this, this._game.screen.center, 320, 620, 10);
+    const frame = new Frame(
+      this,
+      vec(this._game.screen.center.x, this._game.screen.center.y + 50),
+      this._blocksize * 10 + 20,
+      this._blocksize * 20 + 20,
+      10
+    );
 
     //全体盤面の生成
-    this._board = new Board(this, frame.innerpos_leftup, 300, 600, 30);
+    this._board = new Board(
+      this,
+      frame.innerpos_leftup,
+      this._blocksize * 10,
+      this._blocksize * 20,
+      25
+    );
 
+    this.add(this._turnlabel);
+    this.add(this._scorelabel);
     this.add(frame);
 
     //通信イベントを作成
@@ -69,13 +118,13 @@ class PlayGame extends Scene {
       this._game.goToScene("title");
     });
 
-    connection?.addSocketEvent("makePopup", (data: any) => {
-      alert(data.message);
+    connection?.addSocketEvent("updateScore", (data: any) => {
+      console.log(data);
+      this.changeLabel(data.isturn, data.score);
     });
   }
 
   public onActivate(_context: SceneActivationContext<unknown>): void {
-    this._score = 0;
     this._game.clock.schedule(() => {
       connection?.emitMessage("readyStart");
     }, 1000);
@@ -90,6 +139,15 @@ class PlayGame extends Scene {
 
   public update(_engine: Engine, _delta: number): void {
     super.update(_engine, _delta);
+    if (_engine.input.keyboard.wasPressed(Input.Keys.D)) {
+      this.MoveMino("right");
+    }
+    if (_engine.input.keyboard.wasPressed(Input.Keys.A)) {
+      this.MoveMino("left");
+    }
+    if (_engine.input.keyboard.wasPressed(Input.Keys.S)) {
+      connection?.emitMessage("dropMino");
+    }
     if (_engine.input.keyboard.wasPressed(Input.Keys.Right)) {
       this.MoveMino("right");
     }
@@ -125,9 +183,18 @@ class PlayGame extends Scene {
       this._board._pos,
       vec(data.startpos.x, data.startpos.y),
       data.nextmino,
-      30
+      this._blocksize
     );
     this.add(this._currentMino);
+  }
+
+  public changeLabel(isturn: boolean, score: number[]) {
+    if (isturn) {
+      this._turnlabel.text = "あなたの番です";
+    } else {
+      this._turnlabel.text = "相手の番です";
+    }
+    this._scorelabel.text = `あなたのスコア: ${score[0]}  相手のスコア: ${score[1]}`;
   }
 
   public dissapearedLineAction(dissapeared_line: number[]) {}

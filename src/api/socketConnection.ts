@@ -5,12 +5,14 @@ class socketConnection {
   private socket;
 
   constructor(path: string) {
+    console.log("newsocket");
     this.ENDPOINT = path;
-    this.socket = io(this.ENDPOINT);
+    this.socket = io(this.ENDPOINT, { autoConnect: false });
   }
 
   //ソケットの初期登録
   init() {
+    this.socket.open();
     this.socket.on("updateConnectionCount", (data) => {
       const { newConnectCount }: { newConnectCount: number } = data;
       console.log(newConnectCount);
@@ -33,7 +35,8 @@ export let connection: socketConnection | undefined = undefined;
 export const makeConnection = () => {
   //ソケット通信の設定
   //本番環境ではherokuのURLを指定する
-  const ENDPOINT: string = "https://kaialex22-excalibur.herokuapp.com/";
+  //const ENDPOINT: string = "https://kaialex22-excalibur.herokuapp.com/";
+  const ENDPOINT: string = "http://localhost:8080";
   connection = new socketConnection(ENDPOINT);
   connection.init();
 };

@@ -17,34 +17,39 @@ import textButton from "../objects/textButton";
 import resources from "../objects/resouces";
 import resizeSprite from "../util/resizeSprite";
 import { connection } from "../api/socketConnection";
+import Popup from "../objects/popup";
 
 class Title extends Scene {
   private _game: Engine;
 
-  private _bg: Sprite;
+  private _bgSprite: Sprite;
+  private _background!: Actor;
+  private _title!: Label;
+  private _button!: textButton;
+  private _popUp!: Popup;
 
   constructor(game: Engine) {
     super();
     this._game = game;
 
-    this._bg = resources.titleBackground.toSprite();
+    this._bgSprite = resources.titleBackground.toSprite();
   }
 
   public onInitialize(_engine: Engine): void {
-    this._bg.scale = resizeSprite(
-      this._bg,
+    this._bgSprite.scale = resizeSprite(
+      this._bgSprite,
       this._game.drawWidth,
       this._game.drawHeight
     );
     //背景画像
-    const background = new Actor({
+    this._background = new Actor({
       x: this._game.screen.center.x,
       y: this._game.screen.center.y,
     });
-    background.graphics.use(this._bg);
+    this._background.graphics.use(this._bgSprite);
 
     //タイトルの表示
-    const title = new Label({
+    this._title = new Label({
       x: this._game.drawWidth / 2,
       y: this._game.drawHeight / 2 - 100,
       text: "MULTI TETRIS",
@@ -58,7 +63,7 @@ class Title extends Scene {
     });
 
     //ボタンの表示
-    const button = new textButton({
+    this._button = new textButton({
       scene: this,
       pos: Vector.Zero,
       text: new Text({
@@ -71,32 +76,69 @@ class Title extends Scene {
       }),
       width: 200,
       clicked: () => {
-        //this._game.goToScene("playgame");
         connection?.emitMessage("matching");
       },
       btnBackground: resources.BtnBackground.toSprite(),
+      z: 1,
     });
 
-    button.pos = vec(
-      this._game.drawWidth / 2 - button.width / 2,
-      this._game.drawHeight / 2 - button.height / 2
+    this._button.pos = vec(
+      this._game.drawWidth / 2 - this._button.width / 2,
+      this._game.drawHeight / 2 - this._button.height / 2
     );
 
-    this.add(background);
-    this.add(title);
-    this.add(button);
+    this.add(this._background);
+    this.add(this._title);
+    this.add(this._button);
 
     //イベント登録
     connection?.addSocketEvent("startGame", () => {
-      this._game.goToScene("playgame");
+      this._popUp.changeText("マッチング相手が見つかりました!", 15);
+      setTimeout(() => {
+        this._popUp.kill();
+        this._game.goToScene("playgame");
+      }, 1000);
+    });
+
+    connection?.addSocketEvent("makePopup", (data: any) => {
+      this._button.preventButtonEvent();
+      if (this._popUp !== undefined) this._popUp.kill();
+      this._popUp = new Popup({
+        scene: this,
+        pos: vec(this._game.drawWidth / 2, this._game.drawHeight / 2),
+        width: 300,
+        height: 200,
+        text: data.message,
+        buttontext: "OK",
+        clicked: () => {
+          setTimeout(() => {
+            this._button.activateButtonEvent();
+          }, 10);
+        },
+      });
+      this._popUp.changeText(data.message, 15);
+      this.add(this._popUp);
+      console.log("makepopup");
+    });
+
+    connection?.addSocketEvent("waitMatching", (data: any) => {
+      this._button.preventButtonEvent();
+      if (this._popUp !== undefined) this._popUp.kill();
+      this._popUp = new Popup({
+        scene: this,
+        pos: vec(this._game.drawWidth / 2, this._game.drawHeight / 2),
+        width: 300,
+        height: 200,
+        text: "マッチング中...",
+      });
+      this._popUp.setHoppingAnimation();
+      this.add(this._popUp);
     });
   }
 
   public onActivate(_context: ex.SceneActivationContext<unknown>): void {}
 
-  public onDeactivate(_context: SceneActivationContext<undefined>): void {
-    //this._button.kill();
-  }
+  public onDeactivate(_context: SceneActivationContext<undefined>): void {}
 }
 
 export default Title;
